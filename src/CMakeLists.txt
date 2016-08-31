@@ -1,3 +1,5 @@
+add_subdirectory(vendor)
+
 add_library(craftai craftai.c craftai.h)
 
 if(CMAKE_COMPILER_IS_GNUCC)

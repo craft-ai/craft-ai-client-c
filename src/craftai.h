@@ -31,6 +31,7 @@
 #define HEADER_CRAFTAI_H
 
 #include <curl/curl.h>
+#include "vendor/jsonsl.h"
 
 #ifdef _cplusplus
 extern "C"
@@ -72,7 +73,7 @@ typedef struct craft_decision {
     char *output_name;
     craft_type_t output_type;
     void *output_value;
-};
+} craft_decision_t;
 
 typedef enum craft_status {
     CRAFTAI_OK = 0,
@@ -103,6 +104,6 @@ craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations
 craft_status_t craft_retrieve_state(char *agent_id, time_t timestamp, craft_context_t *state);
 
 craft_status_t craft_compute_decision_tree(char *agent_id, time_t timestamp, craft_tree_t *tree);
-craft_status_t craft_decide(craft_tree_t *tree, craft_context_t *decision_context);
+craft_status_t craft_decide(craft_tree_t *tree, craft_context_t *context, craft_decision_t *decision);
 
 #endif
