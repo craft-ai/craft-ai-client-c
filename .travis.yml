@@ -1,40 +1,107 @@
+#######################################################################################################
+# This .travis.yml is freely inspired from https://github.com/boostorg/hana/blob/master/.travis.yml   #
+# to ensure proper configuration of the different build environments (especially compilers)           #
+#######################################################################################################
+
 language: c
-compiler:
-    - gcc
-    - clang
-    - arm-none-eabi-gcc
-    - arm-linux-gnueabihf-gcc
+sudo: false
 
 # disable the default submodule logic
 git:
-    submodules: false
+  submodules: false
 
-# use sed to replace the git SSH URL with the public URL, then init and update submodules
+env:
+  # Workaround for https://github.com/travis-ci/travis-ci/issues/4681
+  matrix:
+    - TRAVIS_EMPTY_JOB_WORKAROUND=true
+
+addons:
+  apt:
+    packages:
+      - libc6-i386
+
+matrix:
+  exclude:
+    - env: TRAVIS_EMPTY_JOB_WORKAROUND=true
+
+  include:
+    ##########################################################################
+    # Build with the main configuration on all the supported compilers
+    ##########################################################################
+    # GCC
+    - os: linux
+      env: COMPILER=gcc
+      compiler: gcc
+
+    # arm-none-eabi-gcc
+    - os: linux
+      env: COMPILER=arm-none-eabi-gcc
+      compiler: gcc
+
+    # arm-linux-gnueabihf-gcc
+    - os: linux
+      env: COMPILER=arm-linux-gnueabihf-gcc
+      compiler: gcc
+
+    # Clang
+    - os: linux
+      compiler: clang
+
 before_install:
+  # Use sed to replace the git SSH URL with the public URL, then init and update submodules
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
-  # Install the arm32 cross-compiler
-  - sudo apt-get update -qq
-  - sudo apt-get install -y gcc-arm-linux-gnueabihf
-  - arm-linux-gnueabihf-gcc --version
-  # Install 32-bit compatibility libraries for the Linaro arm64 cross-compiler
-  # (which is a 32-bit x86 binary)
-  - if [ `uname -m` = x86_64 ]; then sudo apt-get install libc6-i386 lib32stdc++6 lib32z1; fi
+
+install:
+############################################################################
+# All the dependencies are installed in ${TRAVIS_BUILD_DIR}/deps/
+############################################################################
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+
+  ############################################################################
+  # Setup default versions and override compiler if needed
+  ############################################################################
+  - if [[ "${COMPILER}" != "" ]]; then export CC=${COMPILER}; fi
+
+  ############################################################################
+  # Install the ARM cross-compilers
+  ############################################################################$
+
+  # If we are using gcc but not the standard one
+  - |
+    if [[ "${CC}" != gcc ]] && [[ "${COMPILER}" != "" ]]; then
+      GCC_DIR=${DEPS_DIR}/${COMPILER}
+      mkdir ${GCC_DIR}
+      # Checking built directory
+      if [[ -z "$(ls -A ${GCC_DIR})" ]]; then
+        if [[ "${CC}" == arm-none-eabi-gcc ]]; then
+          GCC_URL="https://releases.linaro.org/14.04/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.bz2"
+          travis_retry wget --quiet -O - ${GCC_URL} | tar xjf gcc-linaro-arm-none-eabi-*_linux.tar.bz2 -C ${GCC_DIR}
+          export PATH=$PATH:${GCC_DIR}/bin
+          ${COMPILER} --version;
+        fi
+        if [[ "${CC}" == arm-none-gnueabihf-gcc ]]; then
+          GCC_URL="https://releases.linaro.org/14.04/components/toolchain/binaries/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux.tar.bz2"
+          travis_retry wget --quiet -O - ${GCC_URL} | tar xjf gcc-linaro-arm-linux-gnueabihf-*_linux.tar.bz2 -C ${GCC_DIR}
+          export PATH=$PATH:${GCC_DIR}/bin
+          ${COMPILER} --version;
+        fi
+      fi
+    fi
+
+before_script:
+  ############################################################################
+  # Go back to the root of the project and setup the build directory
+  ############################################################################
+  - cd ${TRAVIS_BUILD_DIR}
+  - cmake ./
 
 script: 
-    - cmake ./
-    - make all
-    - ctest --output-on-failure
+  - make all
+  - ctest --output-on-failure
 
-sudo: required
-
-# addons:
-#   apt:
-#     packages:
-#       - libc6-i386
-
-#     # sources:
-#     #   - debian-sid
-#     packages:
-#       - gcc-arm-none-eabi
-#       - gcc-arm-linux-gnueabihf
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/deps/arm-none-gnueabihf-gcc
+    - ${TRAVIS_BUILD_DIR}/deps/arm-none-eabi-gcc
