@@ -25,5 +25,9 @@ addons:
   apt:
     packages:
       - libc6-i386
+
+    sources:
+      - debian-sid
+    packages:
       - gcc-arm-none-eabi
       - gcc-arm-linux-gnueabihf
