@@ -19,15 +19,15 @@ script:
     - make all
     - ctest --output-on-failure
 
-sudo: false
+sudo: required
 
 addons:
   apt:
     packages:
       - libc6-i386
 
-    sources:
-      - debian-sid
+    # sources:
+    #   - debian-sid
     packages:
       - gcc-arm-none-eabi
       - gcc-arm-linux-gnueabihf
