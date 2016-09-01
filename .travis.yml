@@ -13,6 +13,13 @@ git:
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
+  # Install the arm32 cross-compiler
+  - sudo apt-get update -qq
+  - sudo apt-get install -y gcc-arm-linux-gnueabihf
+  - arm-linux-gnueabihf-gcc --version
+  # Install 32-bit compatibility libraries for the Linaro arm64 cross-compiler
+  # (which is a 32-bit x86 binary)
+  - if [ `uname -m` = x86_64 ]; then sudo apt-get install libc6-i386 lib32stdc++6 lib32z1; fi
 
 script: 
     - cmake ./
@@ -21,13 +28,13 @@ script:
 
 sudo: required
 
-addons:
-  apt:
-    packages:
-      - libc6-i386
+# addons:
+#   apt:
+#     packages:
+#       - libc6-i386
 
-    # sources:
-    #   - debian-sid
-    packages:
-      - gcc-arm-none-eabi
-      - gcc-arm-linux-gnueabihf
+#     # sources:
+#     #   - debian-sid
+#     packages:
+#       - gcc-arm-none-eabi
+#       - gcc-arm-linux-gnueabihf
