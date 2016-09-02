@@ -1,0 +1,3 @@
+[submodule "tests/data/interpreter"]
+	path = tests/data/interpreter
+	url = git@github.com:craft-ai/craft-ai-interpreter-test-suite.git
