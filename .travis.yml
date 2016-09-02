@@ -80,13 +80,15 @@ install:
           travis_retry wget --quiet ${GCC_URL}
           tar xjf gcc-linaro-arm-none-eabi-*_linux.tar.bz2 -C ${GCC_DIR}
           export PATH=$PATH:${GCC_DIR}/bin
+          echo ${PATH}
           ${COMPILER} --version;
         fi
-        if [[ "${CC}" == arm-none-gnueabihf-gcc ]]; then
+        if [[ "${CC}" == arm-linux-gnueabihf-gcc ]]; then
           GCC_URL="https://releases.linaro.org/14.04/components/toolchain/binaries/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux.tar.bz2"
           travis_retry wget --quiet ${GCC_URL}
           tar xjf gcc-linaro-arm-linux-gnueabihf-*_linux.tar.bz2 -C ${GCC_DIR}
           export PATH=$PATH:${GCC_DIR}/bin
+          echo ${PATH}
           ${COMPILER} --version;
         fi
       fi

@@ -32,24 +32,51 @@
 
 #include "craftai.h"
 
-int main(int argc, char const *argv[])
-{
-    CURL *curl;
-    CURLcode res;
+craft_status_t craft_set_config(craft_settings_t *config) {
+    craft_status_t status = CRAFTAI_OK;
 
-    /* Global initialization, should be called once and only once ! */
-    curl_global_init(CURL_GLOBAL_DEFAULT);
+    return status;
+}
 
-    curl = curl_easy_init();
-    if (curl)
-    {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://beta.craft.ai/");
-        curl_easy_setopt(curl, CURLOPT_POST, 1);
-        curl_easy_setopt(curl, CURLOPT_);
+craft_status_t craft_create_agent(craft_model_t *model, char *agent_id) {
+    craft_status_t status = CRAFTAI_OK;
 
-    }
+    return status;
+}
+craft_status_t craft_get_agent(char *agent_id) {
+    craft_status_t status = CRAFTAI_OK;
 
-    /* Global tear down, should be called once and only once ! */
-    curl_global_cleanup();
-    return 0;
+    return status;
+}
+craft_status_t craft_delete_agent(char *agent_id) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+
+craft_status_t craft_add_operations(char *agent_id, craft_context_t *operations_list, int nb_operations) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations_list, int nb_operations) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+craft_status_t craft_retrieve_state(char *agent_id, time_t timestamp, craft_context_t *state) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+
+craft_status_t craft_compute_decision_tree(char *agent_id, time_t timestamp, craft_tree_t *tree) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+craft_status_t craft_decide(craft_tree_t *tree, craft_context_t *context, craft_decision_t *decision) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
 }
