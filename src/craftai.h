@@ -92,13 +92,6 @@ typedef enum craft_status {
     CRAFTAI_UNKNOWN_ERROR
 } craft_status_t;
 
-/**
- * @brief      Sets the owner and craft ai token from the given settings object
- *
- * @param      config  The configuration you should be applied and used upon each request to craftai.
- *
- * @return     { description_of_the_return_value }
- */
 craft_status_t craft_set_config(craft_settings_t *config);
 
 craft_status_t craft_create_agent(craft_model_t *model, char *agent_id);
