@@ -19,6 +19,8 @@ addons:
   apt:
     packages:
       - libc6-i386
+      - lib32stdc++6
+      - lib32z1
 
 matrix:
   exclude:
