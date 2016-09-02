@@ -78,7 +78,7 @@ install:
         if [[ "${CC}" == arm-none-eabi-gcc ]]; then
           GCC_URL="https://releases.linaro.org/14.04/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.bz2"
           travis_retry wget --quiet ${GCC_URL}
-          tar xjf gcc-linaro-arm-none-eabi-*_linux.tar.bz2 -C ${GCC_DIR}
+          tar --strip-components=1 -xjf gcc-linaro-arm-none-eabi-*_linux.tar.bz2 -C ${GCC_DIR}
           export PATH=$PATH:${GCC_DIR}/bin
           echo ${PATH}
           ${COMPILER} --version;
@@ -86,7 +86,7 @@ install:
         if [[ "${CC}" == arm-linux-gnueabihf-gcc ]]; then
           GCC_URL="https://releases.linaro.org/14.04/components/toolchain/binaries/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux.tar.bz2"
           travis_retry wget --quiet ${GCC_URL}
-          tar xjf gcc-linaro-arm-linux-gnueabihf-*_linux.tar.bz2 -C ${GCC_DIR}
+          tar --strip-components=1 -xjf gcc-linaro-arm-linux-gnueabihf-*_linux.tar.bz2 -C ${GCC_DIR}
           export PATH=$PATH:${GCC_DIR}/bin
           echo ${PATH}
           ${COMPILER} --version;
@@ -109,3 +109,4 @@ cache:
   directories:
     - ${TRAVIS_BUILD_DIR}/deps/arm-none-gnueabihf-gcc
     - ${TRAVIS_BUILD_DIR}/deps/arm-none-eabi-gcc
+
