@@ -27,6 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+/************************************************************************
+ * This library contains some documentation which is specific to this C *
+ * implementation of a craft ai SDK, but you should always refer to     *
+ * beta.craft.ai/doc **first**!                                         *
+ ************************************************************************/
+
 #ifndef HEADER_CRAFTAI_H
 #define HEADER_CRAFTAI_H
 
@@ -89,21 +96,164 @@ typedef enum craft_status {
     CRAFTAI_DECISION_ERROR,
     CRAFTAI_TIME_ERROR,
 
+    CRAFTAI_INIT_ERROR,
+    CRAFTAI_TEARDOWN_ERROR,
+
     CRAFTAI_UNKNOWN_ERROR
 } craft_status_t;
 
+/**
+ * @brief      Initializes craft ai C client.
+ *
+ *             It should be called first **before** any other API function !
+ *
+ * @return     Status_code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_INIT_ERROR otherwise
+ */
+craft_status_t craft_init();
 
+/**
+ * @brief      Tears down craft ai C client.
+ *
+ *             It should always be called at last **after** any other API function !
+ *
+ * @return     Status_code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_TEARDOWN_ERROR otherwise
+ */
+craft_status_t craft_teardown();
+
+/**
+ * @brief      Sets the owner and craft ai token from the given settings object.
+ *
+ * @param      config  The configuration that should be applied and used upon
+ *                     each request to craftai.
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_CREDENTIALS_ERROR otherwise
+ */
 craft_status_t craft_set_config(craft_settings_t *config);
 
-craft_status_t craft_create_agent(craft_model_t *model, char *agent_id);
-craft_status_t craft_get_agent(char *agent_id);
+
+/**
+ * @brief      Creates a new agent with the given model and agent_id.
+ *
+ *             If agent_id is null, craft ai will generate an ID for you.
+ *
+ * @param      model     The model upon which craft ai bases its learning for
+ *                       the given agent
+ * @param      agent_id  The agent identifier. Should stay the same if you gave
+ *                       one and will contain the newly generated one otherwise. You
+ *                       should not expect agent_id to point to the same adress
+ *                       space as the one given, since it might be freed and
+ *                       changed.
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
+craft_status_t craft_create_agent(craft_model_t *model, char **agent_id);
+/**
+ * @brief      Retrieves the agent's previously defined model.
+ *
+ * @param      agent_id  The agent identifier
+ * @param      model     A model structure which should be allocated and will be
+ *                       initialized from craft ai's response.
+ * @param      first_ts  The timestamp at which the first context operation was
+ *                       posted.
+ * @param      last_ts   The timestamp at which the last context operation was
+ *                       posted.
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
+craft_status_t craft_get_agent(char *agent_id, craft_model_t *model, time_t *first_ts, time_t *last_ts);
+/**
+ * @brief      Deletes the agent with the give agent's id.
+ *
+ * @param      agent_id  The agent identifier
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
 craft_status_t craft_delete_agent(char *agent_id);
 
+
+/**
+ * @brief      Adds context operations to the agent's model, so that craft ai
+ *             can learn from it.
+ *
+ * @param      agent_id         The agent identifier
+ * @param      operations_list  The operations list
+ * @param[in]  nb_operations    The number of operations in the list
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
 craft_status_t craft_add_operations(char *agent_id, craft_context_t *operations_list, int nb_operations);
-craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations_list, int nb_operations);
+/**
+ * @brief      Gives out the list of operations that have been previously added
+ *             to the agent.
+ *
+ * @param      agent_id         The agent identifier
+ * @param      operations_list  The list of operations that were previously added
+ * @param      nb_operations    The number of operations contained in the list
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
+craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations_list, int *nb_operations);
+/**
+ * @brief      Retrieves the agent's context at a given timestamp.
+ *
+ * @param      agent_id   The agent identifier
+ * @param[in]  timestamp  The timestamp at which the context is retrieved.
+ * @param      state      The context state at the given timestamp as given by craft ai's API.
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
 craft_status_t craft_retrieve_state(char *agent_id, time_t timestamp, craft_context_t *state);
 
+
+/**
+ * @brief      Computes the decision tree for the given agent at a specific timestamp.
+ *
+ * @param      agent_id   The agent identifier
+ * @param[in]  timestamp  The timestamp at which the decision tree is computed
+ * @param      tree       The tree structure as returned by craft ai's API.
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
+ *                errors)
+ */
 craft_status_t craft_compute_decision_tree(char *agent_id, time_t timestamp, craft_tree_t *tree);
+
+/**
+ * @brief      Computes a decision given a decision tree and a certain context
+ *
+ * @param      tree      The tree from which to decide
+ * @param      context   The context in which to take the decision
+ * @param      decision  The decision
+ *
+ * @return     Status code:
+ *              - CRAFTAI_OK if everything went fine
+ *              - CRAFTAI_DECISION_ERROR otherwise
+ */
 craft_status_t craft_decide(craft_tree_t *tree, craft_context_t *context, craft_decision_t *decision);
 
 #endif
