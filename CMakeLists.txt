@@ -9,9 +9,5 @@ set(CRAFTAI_VERSION_MINOR 1)
 
 add_subdirectory(src)
 
-# add_subdirectory(doc)
-
-# enable_testing()
-# add_subdirectory(tests)
-
-install(FILES LICENSE DESTINATION ./)
+enable_testing()
+add_subdirectory(tests/src)
