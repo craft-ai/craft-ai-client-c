@@ -44,50 +44,52 @@ craft_status_t craft_teardown() {
     return status;
 }
 
-craft_status_t craft_set_config(craft_settings_t *config) {
+craft_status_t craft_set_config(craft_settings_t* config) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;
 }
 
-craft_status_t craft_create_agent(craft_model_t *model, char *agent_id) {
-    craft_status_t status = CRAFTAI_OK;
-
-    return status;
-}
-craft_status_t craft_get_agent(char *agent_id) {
-    craft_status_t status = CRAFTAI_OK;
-
-    return status;
-}
-craft_status_t craft_delete_agent(char *agent_id) {
+craft_status_t craft_create_agent(craft_model_t* model, char** agent_id) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;
 }
 
-craft_status_t craft_add_operations(char *agent_id, craft_context_t *operations_list, int nb_operations) {
+craft_status_t craft_get_agent(char* agent_id, craft_model_t* model, time_t* first_ts, time_t* last_ts) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;
 }
-craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations_list, int nb_operations) {
-    craft_status_t status = CRAFTAI_OK;
-
-    return status;
-}
-craft_status_t craft_retrieve_state(char *agent_id, time_t timestamp, craft_context_t *state) {
+craft_status_t craft_delete_agent(char* agent_id) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;
 }
 
-craft_status_t craft_compute_decision_tree(char *agent_id, time_t timestamp, craft_tree_t *tree) {
+craft_status_t craft_add_operations(char* agent_id, craft_context_t* operations_list, size_t nb_operations) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;
 }
-craft_status_t craft_decide(craft_tree_t *tree, craft_context_t *context, craft_decision_t *decision) {
+
+craft_status_t craft_list_operations(char* agent_id, craft_context_t* operations_list, size_t* nb_operations) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+craft_status_t craft_retrieve_state(char* agent_id, time_t timestamp, craft_context_t* state) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+
+craft_status_t craft_compute_decision_tree(char* agent_id, time_t timestamp, craft_tree_t* tree) {
+    craft_status_t status = CRAFTAI_OK;
+
+    return status;
+}
+craft_status_t craft_decide(craft_tree_t* tree, craft_context_t* context, craft_decision_t *decision) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;

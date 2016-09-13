@@ -41,12 +41,12 @@
 #include "vendor/jsonsl.h"
 
 #ifdef _cplusplus
-extern "C"
+extern "C" {
 #endif /** _cplusplus */
 
 typedef struct craft_settings {
-    char *owner;
-    char *token;
+    char* owner;
+    char* token;
 } craft_settings_t;
 
 typedef enum craft_type {
@@ -60,13 +60,13 @@ typedef struct craft_context {
 } craft_context_t;
 
 typedef struct craft_model {
-    craft_context_t *context;
-    char **outputs;
+    craft_context_t* context;
+    char** outputs;
     int time_quantum;
 } craft_model_t;
 
 typedef struct craft_tree {
-    char *version;
+    char* version;
     craft_model_t *model;
     jsonsl_t tree;
 } craft_tree_t;
@@ -77,9 +77,9 @@ typedef struct craft_decision {
     jsonsl_t *predicates_list;
     float confidence;
 
-    char *output_name;
+    char* output_name;
     craft_type_t output_type;
-    void *output_value;
+    void* output_value;
 } craft_decision_t;
 
 typedef enum craft_status {
@@ -155,7 +155,7 @@ craft_status_t craft_set_config(craft_settings_t *config);
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_create_agent(craft_model_t *model, char **agent_id);
+craft_status_t craft_create_agent(craft_model_t* model, char** agent_id);
 /**
  * @brief      Retrieves the agent's previously defined model.
  *
@@ -172,7 +172,7 @@ craft_status_t craft_create_agent(craft_model_t *model, char **agent_id);
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_get_agent(char *agent_id, craft_model_t *model, time_t *first_ts, time_t *last_ts);
+craft_status_t craft_get_agent(char* agent_id, craft_model_t* model, time_t* first_ts, time_t* last_ts);
 /**
  * @brief      Deletes the agent with the give agent's id.
  *
@@ -183,7 +183,7 @@ craft_status_t craft_get_agent(char *agent_id, craft_model_t *model, time_t *fir
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_delete_agent(char *agent_id);
+craft_status_t craft_delete_agent(char* agent_id);
 
 
 /**
@@ -199,7 +199,7 @@ craft_status_t craft_delete_agent(char *agent_id);
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_add_operations(char *agent_id, craft_context_t *operations_list, int nb_operations);
+craft_status_t craft_add_operations(char* agent_id, craft_context_t* operations_list, size_t nb_operations);
 /**
  * @brief      Gives out the list of operations that have been previously added
  *             to the agent.
@@ -213,7 +213,7 @@ craft_status_t craft_add_operations(char *agent_id, craft_context_t *operations_
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations_list, int *nb_operations);
+craft_status_t craft_list_operations(char* agent_id, craft_context_t* operations_list, size_t* nb_operations);
 /**
  * @brief      Retrieves the agent's context at a given timestamp.
  *
@@ -226,7 +226,7 @@ craft_status_t craft_list_operations(char *agent_id, craft_context_t *operations
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_retrieve_state(char *agent_id, time_t timestamp, craft_context_t *state);
+craft_status_t craft_retrieve_state(char* agent_id, time_t timestamp, craft_context_t* state);
 
 
 /**
@@ -241,7 +241,7 @@ craft_status_t craft_retrieve_state(char *agent_id, time_t timestamp, craft_cont
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_compute_decision_tree(char *agent_id, time_t timestamp, craft_tree_t *tree);
+craft_status_t craft_compute_decision_tree(char* agent_id, time_t timestamp, craft_tree_t* tree);
 
 /**
  * @brief      Computes a decision given a decision tree and a certain context
@@ -254,6 +254,10 @@ craft_status_t craft_compute_decision_tree(char *agent_id, time_t timestamp, cra
  *              - CRAFTAI_OK if everything went fine
  *              - CRAFTAI_DECISION_ERROR otherwise
  */
-craft_status_t craft_decide(craft_tree_t *tree, craft_context_t *context, craft_decision_t *decision);
+craft_status_t craft_decide(craft_tree_t* tree, craft_context_t* context, craft_decision_t* decision);
+
+#ifdef _cplusplus
+}
+#endif /** _cplusplus */
 
 #endif
