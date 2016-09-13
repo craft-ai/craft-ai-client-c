@@ -34,52 +34,76 @@
  * beta.craft.ai/doc **first**!                                         *
  ************************************************************************/
 
-#ifndef HEADER_CRAFTAI_H
-#define HEADER_CRAFTAI_H
+#ifndef CRAFTAI_H
+#define CRAFTAI_H
 
-#include <curl/curl.h>
-#include "vendor/jsonsl.h"
+#include <time.h>
 
 #ifdef _cplusplus
 extern "C" {
-#endif /** _cplusplus */
+#endif // _cplusplus
+
+// Boolean type definitions
+typedef enum { false, true } bool;
 
 typedef struct craft_settings {
     char* owner;
     char* token;
 } craft_settings_t;
 
-typedef enum craft_type {
+typedef enum craft_property_type {
     ENUM,
-    CONTINUOUS
-} craft_type_t;
+    CONTINUOUS,
+    TIME_OF_DAY,
+    DAY_OF_WEEK
+} craft_property_type_t;
 
-typedef struct craft_context {
-    time_t timestamp;
-    jsonsl_t diff;
-} craft_context_t;
+typedef struct craft_base_property_definition {
+} craft_base_property_definition_t;
+
+typedef struct craft_time_property_definition {
+    bool is_generated;
+} craft_time_property_definition_t;
+
+typedef struct craft_property_definition {
+    craft_property_type_t type;
+    union {
+      struct {
+        // NOTHING
+      } base_property_definition;
+      struct {
+          bool is_generated;
+      } time_property_definition;
+    } definition;
+} craft_property_definition_t;
+
+typedef struct craft_property {
+    char* key;
+    craft_property_type_t type;
+    union {
+      float number_value;
+      char* string_value;
+    } value;
+} craft_property_t;
 
 typedef struct craft_model {
-    craft_context_t* context;
-    char** outputs;
+    craft_property_definition_t* properties;
+    int properties_count;
+    char* outputs;
+    int outputs_count;
     int time_quantum;
 } craft_model_t;
 
-typedef struct craft_tree {
-    char* version;
-    craft_model_t *model;
-    jsonsl_t tree;
-} craft_tree_t;
+typedef struct craft_context {
+    time_t timestamp;
+    craft_property_t* properties;
+    int properties_count;
+} craft_context_t;
 
 typedef struct craft_decision {
     craft_context_t context;
 
-    jsonsl_t *predicates_list;
-    float confidence;
-
-    char* output_name;
-    craft_type_t output_type;
-    void* output_value;
+    craft_property_t output;
 } craft_decision_t;
 
 typedef enum craft_status {
@@ -134,7 +158,7 @@ craft_status_t craft_teardown();
  *              - CRAFTAI_OK if everything went fine
  *              - CRAFTAI_CREDENTIALS_ERROR otherwise
  */
-craft_status_t craft_set_config(craft_settings_t *config);
+craft_status_t craft_set_config(craft_settings_t* config);
 
 
 /**
@@ -228,36 +252,8 @@ craft_status_t craft_list_operations(char* agent_id, craft_context_t* operations
  */
 craft_status_t craft_retrieve_state(char* agent_id, time_t timestamp, craft_context_t* state);
 
-
-/**
- * @brief      Computes the decision tree for the given agent at a specific timestamp.
- *
- * @param      agent_id   The agent identifier
- * @param[in]  timestamp  The timestamp at which the decision tree is computed
- * @param      tree       The tree structure as returned by craft ai's API.
- *
- * @return     Status code:
- *              - CRAFTAI_OK if everything went fine
- *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
- *                errors)
- */
-craft_status_t craft_compute_decision_tree(char* agent_id, time_t timestamp, craft_tree_t* tree);
-
-/**
- * @brief      Computes a decision given a decision tree and a certain context
- *
- * @param      tree      The tree from which to decide
- * @param      context   The context in which to take the decision
- * @param      decision  The decision
- *
- * @return     Status code:
- *              - CRAFTAI_OK if everything went fine
- *              - CRAFTAI_DECISION_ERROR otherwise
- */
-craft_status_t craft_decide(craft_tree_t* tree, craft_context_t* context, craft_decision_t* decision);
-
 #ifdef _cplusplus
 }
-#endif /** _cplusplus */
+#endif // _cplusplus
 
-#endif
+#endif // CRAFTAI_H

@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "craftai.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "craftai.h"
 
 craft_status_t craft_init() {
     craft_status_t status = CRAFTAI_OK;
@@ -61,6 +61,7 @@ craft_status_t craft_get_agent(char* agent_id, craft_model_t* model, time_t* fir
 
     return status;
 }
+
 craft_status_t craft_delete_agent(char* agent_id) {
     craft_status_t status = CRAFTAI_OK;
 
@@ -78,18 +79,8 @@ craft_status_t craft_list_operations(char* agent_id, craft_context_t* operations
 
     return status;
 }
+
 craft_status_t craft_retrieve_state(char* agent_id, time_t timestamp, craft_context_t* state) {
-    craft_status_t status = CRAFTAI_OK;
-
-    return status;
-}
-
-craft_status_t craft_compute_decision_tree(char* agent_id, time_t timestamp, craft_tree_t* tree) {
-    craft_status_t status = CRAFTAI_OK;
-
-    return status;
-}
-craft_status_t craft_decide(craft_tree_t* tree, craft_context_t* context, craft_decision_t *decision) {
     craft_status_t status = CRAFTAI_OK;
 
     return status;
