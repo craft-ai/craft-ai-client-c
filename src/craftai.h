@@ -41,10 +41,10 @@
 
 #ifdef _cplusplus
 extern "C" {
-#endif // _cplusplus
+#endif /* _cplusplus */
 
-// Boolean type definitions
-typedef enum { false, true } bool;
+/* Boolean type definitions */
+typedef enum bool { false, true } bool;
 
 typedef struct craft_settings {
     char* owner;
@@ -69,7 +69,7 @@ typedef struct craft_property_definition {
     craft_property_type_t type;
     union {
       struct {
-        // NOTHING
+        /* NOTHING */
       } base_property_definition;
       struct {
           bool is_generated;
@@ -254,6 +254,6 @@ craft_status_t craft_retrieve_state(char* agent_id, time_t timestamp, craft_cont
 
 #ifdef _cplusplus
 }
-#endif // _cplusplus
+#endif /* _cplusplus */
 
-#endif // CRAFTAI_H
+#endif /* CRAFTAI_H */

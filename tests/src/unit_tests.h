@@ -1,11 +1,11 @@
-#ifndef CRAFTAI_UNIT_TESTS
-#define CRAFTAI_UNIT_TESTS
+#ifndef CRAFTAI_UNIT_TESTS_H
+#define CRAFTAI_UNIT_TESTS_H
 
 #define STRINGIZE(x) STRINGIZE2(x)
 #define STRINGIZE2(x) #x
 #define LINE_STRING STRINGIZE(__LINE__)
 
-// Assertions
+/* Assertions */
 #define CRAFT_TEST_ASSERT_MSG(test, message) \
 do { \
     if (!(test)) { \
@@ -38,4 +38,4 @@ int main(int argc, char **argv) { \
  \
 static char* craftai_run_tests()
 
-#endif
+#endif /* CRAFTAI_UNIT_TESTS_H */
