@@ -29,25 +29,79 @@
 
 #include "craftai.h"
 
+#include <curl/curl.h>
+
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+typedef enum craft_client_status {
+    CRAFTAI_TEARDOWNED = 0,
+    CRAFTAI_INITIALIZED
+} craft_client_status_t;
+
+#define CRAFT_MAX_OWNER_SIZE 256
+#define CRAFT_MAX_TOKEN_SIZE 1024
+#define CRAFT_MAX_URL_SIZE 512
+
+typedef struct craft_client {
+    craft_client_status_t status;
+    /* Configuration */
+    char owner[CRAFT_MAX_OWNER_SIZE];
+    char token[CRAFT_MAX_TOKEN_SIZE];
+    char url[CRAFT_MAX_URL_SIZE];
+} craft_client_t;
+
+static craft_client_t default_client = { CRAFTAI_TEARDOWNED, "", "", "https://beta.craft.ai" };
+static craft_client_t client = { CRAFTAI_TEARDOWNED, "", "", "https://beta.craft.ai" };
 
 craft_status_t craft_init() {
-    craft_status_t status = CRAFTAI_OK;
+    if (client.status != CRAFTAI_TEARDOWNED) {
+      return CRAFTAI_ALREADY_INITIALIZED;
+    }
 
-    return status;
+    /* Initializing curl with support for HTTPS */
+    CURLcode curl_init_status = curl_global_init(CURL_GLOBAL_ALL);
+    if (curl_init_status != CURLE_OK) {
+      return CRAFTAI_CURL_ERROR;
+    }
+
+    client.status = CRAFTAI_INITIALIZED;
+    
+    return CRAFTAI_OK;
 }
 
 craft_status_t craft_teardown() {
-    craft_status_t status = CRAFTAI_OK;
+    /* Cleaning up curl */
+    curl_global_cleanup();
 
-    return status;
+    /* Resetting the client itself */
+    client = default_client;
+
+    return CRAFTAI_OK;
 }
 
-craft_status_t craft_set_config(craft_settings_t* config) {
-    craft_status_t status = CRAFTAI_OK;
+/**
+ * Set the value of a given option in the client configuration.
+ */
+craft_status_t craft_config(craft_option_t option, ...) {
+  va_list argp;
 
-    return status;
+  va_start(argp, option);
+  switch (option) {
+    case CRAFTAI_TOKEN:
+      strcpy(client.token, va_arg(argp, char*));
+      return CRAFTAI_OK;
+    case CRAFTAI_OWNER:
+      strcpy(client.owner, va_arg(argp, char*));
+      return CRAFTAI_OK;
+    case CRAFTAI_URL:
+      strcpy(client.url, va_arg(argp, char*));
+      return CRAFTAI_OK;
+    default:
+      return CRAFTAI_UNKNOWN_CONFIG_OPTION;
+  }
 }
 
 craft_status_t craft_create_agent(craft_model_t* model, char** agent_id) {

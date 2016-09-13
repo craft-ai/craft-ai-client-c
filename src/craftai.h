@@ -120,46 +120,52 @@ typedef enum craft_status {
     CRAFTAI_DECISION_ERROR,
     CRAFTAI_TIME_ERROR,
 
-    CRAFTAI_INIT_ERROR,
-    CRAFTAI_TEARDOWN_ERROR,
+    CRAFTAI_ALREADY_INITIALIZED,
+
+    CRAFTAI_CURL_ERROR,
+
+    CRAFTAI_UNKNOWN_CONFIG_OPTION,
 
     CRAFTAI_UNKNOWN_ERROR
 } craft_status_t;
 
+typedef enum craft_option {
+    CRAFTAI_TOKEN = 0, /* Token, can be changed at any time - char* */
+    CRAFTAI_OWNER, /* Owner, can be changed at any time - char* */
+    CRAFTAI_URL /* (Advanced) API Url, can be changed at any time - char* */
+} craft_option_t;
+
 /**
- * @brief      Initializes craft ai C client.
+ * Initializes the craft ai C client, should be called **before** any other function!
  *
- *             It should be called first **before** any other API function !
- *
- * @return     Status_code:
- *              - CRAFTAI_OK if everything went fine
- *              - CRAFTAI_INIT_ERROR otherwise
+ * @return Status_code:
+ *  - CRAFTAI_OK if everything went fine
+ *  - CRAFTAI_ALREADY_INITIALIZED if the client was already initialized
+ *  - CRAFTAI_CURL_ERROR if cURL (used for http requests) initialization failed
  */
 craft_status_t craft_init();
 
 /**
- * @brief      Tears down craft ai C client.
+ * Tears down the craft ai C client.
  *
- *             It should always be called at last **after** any other API function !
- *
- * @return     Status_code:
- *              - CRAFTAI_OK if everything went fine
- *              - CRAFTAI_TEARDOWN_ERROR otherwise
+ * @return Status_code:
+ *  - CRAFTAI_OK if everything went fine
  */
 craft_status_t craft_teardown();
 
 /**
- * @brief      Sets the owner and craft ai token from the given settings object.
- *
- * @param      config  The configuration that should be applied and used upon
- *                     each request to craftai.
- *
- * @return     Status code:
- *              - CRAFTAI_OK if everything went fine
- *              - CRAFTAI_CREDENTIALS_ERROR otherwise
- */
-craft_status_t craft_set_config(craft_settings_t* config);
+ * Set the value of a given option in the client configuration.
 
+ * @return Status_code:
+ *  - CRAFTAI_OK if everything went fine
+ *  - CRAFTAI_UNKNOWN_CONFIG_OPTION if the given option is unknown
+ */
+craft_status_t craft_config(craft_option_t option, ...);
+
+/**
+ * Retrieve the value of a given option from the client configuration.
+ */
+craft_status_t craft_get_config(craft_option_t option, ...);
 
 /**
  * @brief      Creates a new agent with the given model and agent_id.
