@@ -1,29 +1,18 @@
 language: c
 compiler:
-    - gcc
-    - clang
-    - arm-none-eabi-gcc
-    - arm-linux-gnueabihf-gcc
+  - gcc
+  - clang
 
 # disable the default submodule logic
 git:
-    submodules: false
+  submodules: false
 
 # use sed to replace the git SSH URL with the public URL, then init and update submodules
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
 
-script: 
-    - cmake ./
-    - make all
-    - ctest --output-on-failure
+script:
+  - ./build.sh
 
 sudo: false
-
-addons:
-  apt:
-    packages:
-      - libc6-i386
-      - gcc-arm-none-eabi
-      - gcc-arm-linux-gnueabihf

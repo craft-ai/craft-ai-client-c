@@ -30,15 +30,15 @@
 *.x86_64
 *.hex
 
-
 ###CMake###
-
 CMakeCache.txt
 CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
 
+# Build directory
+build
 
 ###SublimeText###
 
