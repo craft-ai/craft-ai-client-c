@@ -37,19 +37,17 @@
 #ifndef CRAFTAI_H
 #define CRAFTAI_H
 
-#include <time.h>
-
 #ifdef _cplusplus
 extern "C" {
 #endif /* _cplusplus */
 
+#include <time.h>
+
 /* Boolean type definitions */
 typedef enum bool { false, true } bool;
 
-typedef struct craft_settings {
-    char* owner;
-    char* token;
-} craft_settings_t;
+#define CRAFT_MAX_ID_SIZE 512
+#define CRAFT_MAX_PROPERTIES_SIZE 128
 
 typedef enum craft_property_type {
     ENUM,
@@ -58,23 +56,10 @@ typedef enum craft_property_type {
     DAY_OF_WEEK
 } craft_property_type_t;
 
-typedef struct craft_base_property_definition {
-} craft_base_property_definition_t;
-
-typedef struct craft_time_property_definition {
-    bool is_generated;
-} craft_time_property_definition_t;
-
 typedef struct craft_property_definition {
+    char* key;
     craft_property_type_t type;
-    union {
-      struct {
-        /* NOTHING */
-      } base_property_definition;
-      struct {
-          bool is_generated;
-      } time_property_definition;
-    } definition;
+    bool is_generated;
 } craft_property_definition_t;
 
 typedef struct craft_property {
@@ -87,17 +72,17 @@ typedef struct craft_property {
 } craft_property_t;
 
 typedef struct craft_model {
-    craft_property_definition_t* properties;
-    int properties_count;
-    char* outputs;
-    int outputs_count;
-    int time_quantum;
+    craft_property_definition_t properties[CRAFT_MAX_PROPERTIES_SIZE];
+    size_t properties_count;
+    char* outputs[CRAFT_MAX_PROPERTIES_SIZE];
+    size_t outputs_count;
+    unsigned int time_quantum;
 } craft_model_t;
 
 typedef struct craft_context {
     time_t timestamp;
     craft_property_t* properties;
-    int properties_count;
+    size_t properties_count;
 } craft_context_t;
 
 typedef struct craft_decision {
@@ -185,7 +170,7 @@ craft_status_t craft_get_config(craft_option_t option, ...);
  *              - CRAFTAI_*_ERROR otherwise (should be from the list of request
  *                errors)
  */
-craft_status_t craft_create_agent(craft_model_t* model, char** agent_id);
+craft_status_t craft_create_agent(craft_model_t* model, char* agent_id);
 /**
  * @brief      Retrieves the agent's previously defined model.
  *

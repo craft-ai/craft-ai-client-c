@@ -1,18 +1,16 @@
 language: c
 compiler:
-  - gcc
-  - clang
-
-# disable the default submodule logic
+- gcc
+- clang
 git:
   submodules: false
-
-# use sed to replace the git SSH URL with the public URL, then init and update submodules
 before_install:
-  - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-  - git submodule update --init --recursive
-
+- sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- git submodule update --init --recursive
 script:
-  - ./build.sh
-
+- "./build.sh"
 sudo: false
+env:
+  global:
+  - secure: PNcCpoHyjBe6mKz6N8oQ8HVFs9B3DwD3ax54rAQSI5YbA/upUO6NUMDjkmV78f5YdxKML7IivPEk0uBRGeraGqbpmb+QNSpm/ihp+brPimalKFJUvnoH61kY4AYfL/4qVICTUjbG4YzVTH9MjY9SHgy8KxUcWc/dKsiTKJzLDIZIRR5nVEARDtMwlzKE4foSz44MZvQ15zulZhHkxwZ0TBulefRkdc9pT+ESHaqxm5FbQ0nDBM814mF4v29wZTMZ8wzR/iZvav+VGBz+ysBr3o93Rkn5aogaYsXq2koIKq0yvepYzkZMx9m426u/ay/dqrrm995FdSGVrLC2hJv1k6OTuJ4rlG8FyVkkbUroXgcWxE19dQ5qs4SR3/IGaIbVOxNyM2Hxw634+k+1VFdtQ5hyB5yUGn0zZHk8ugxtvz2KJ8jOrXsAPczrF+bA6A3oEhFbJEOHDGcs9HJT7OBUMRg6RrbLKb9YTQFmtWSHqoy/fKMIukIPF/NkT8VI+TO8Tm4wradJmz/I3GAJm+5evowML2vpnB/lRsT/Xqhn/+i70KlTOws7eSsXkNUb61atqaSIYYSlaSwqKmzN7zBEU/TFchohgS5gMQD0qo7T3hAYYJMUj3y6fFc1NNsXNKNYl94bwUeRm4g67NpPFrAyZk84bVGhuMvs6/GaqS5sq2s=
+  - secure: pOKl5uabCoiV/OjmYDA0B5Gf2NmmUMzz2AeKz4AEHWZaDdTg56cLxzdfC0KenQxsagSlpTyjotVPYF+30GVqqXe0kEpvRCSbE3pNAaYYhX5bJzqzRSDpxW59HtdFPpBOWXGc1XxYk6qjGcfAcdnatsoxQf1iYN38lxoOJJxF+69ONKRk/7rtuYY9XoxwG38QRZFjqt+0DzemhPL/FYYcivJAdIOcSIATA6erTEh/HIxd6/dADt/OsUnWe2Hf0lez3X+/nSvnCRrm7QxrEFao/jOG3uNER5N1tGYZOUgGlmQHx6ii5Exb5DLrMAhYulEbYeVuD+cJijzagSYtiaWRQH+quv172h+PVn/qibHVuNP+VIPyadfYZFzenQa1AeGN4uaGy2lXrsBBT52hSUH6kYLsM/oF6f/2ekngUd+AM/25Km91uuHhywonh7qSBlyoa6f9ZCHng+Dj59e1Iv9GMaqKnrDzbUX3xMkeHcSwxwoSbTgvwia+rgbg1xzajPMF9S/UUHOFmdGi3/SHpvenF/4Kt1A1FJ9i/swAkQs358oagldqeelTHUifVPQwL99NKq1qHSDwxFQtG/cp4F5RCGEdzkXr9EQQMAzRrapw23WDoqvCyeGaYlTKsjB2kg3I1DK3KCI4SmSYbtCq8rCDd5d6i8nBr+tj/mYlHqEOAxQ=
