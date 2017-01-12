@@ -8,6 +8,7 @@ CRAFT_TEST(create_destroy_agent) {
     CRAFT_TEST_ASSERT_CALL_OK(craft_init());
 
     craft_model_t model;
+    memset(&model, 0, sizeof(craft_model_t));
     model.properties[0].key = "externalTemp";
     model.properties[0].type = CONTINUOUS;
     model.properties[1].key = "time";
@@ -23,10 +24,10 @@ CRAFT_TEST(create_destroy_agent) {
 
     char* agent_id = "client_c_test_agent";
 
-    CRAFT_TEST_ASSERT_CALL_OK(craft_delete_agent(agent_id));
 
     CRAFT_TEST_ASSERT_CALL_OK(craft_create_agent(&model, agent_id));
     CRAFT_TEST_ASSERT_STR_EQ(agent_id, "client_c_test_agent");
+    CRAFT_TEST_ASSERT_CALL_OK(craft_delete_agent(agent_id));
 
     CRAFT_TEST_ASSERT_CALL_OK(craft_teardown());
     return 0;

@@ -53,7 +53,8 @@ typedef enum craft_property_type {
     ENUM,
     CONTINUOUS,
     TIME_OF_DAY,
-    DAY_OF_WEEK
+    DAY_OF_WEEK,
+    TIMEZONE
 } craft_property_type_t;
 
 typedef struct craft_property_definition {

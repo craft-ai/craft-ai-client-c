@@ -176,6 +176,11 @@ yajl_gen_status craft_gen_model(yajl_gen gen, craft_model_t* model) {
           s = s ||yajl_gen_string(gen, (unsigned char *)"is_generated", 12);
           s = s ||yajl_gen_bool(gen, property_definition->is_generated);
           break;
+      case TIMEZONE:
+          s = s ||yajl_gen_string(gen, (unsigned char *)"timezone", 8);
+          s = s ||yajl_gen_string(gen, (unsigned char *)"is_generated", 12);
+          s = s ||yajl_gen_bool(gen, property_definition->is_generated);
+          break;
       case DAY_OF_WEEK:
           s = s ||yajl_gen_string(gen, (unsigned char *)"day_of_week", 11);
           s = s ||yajl_gen_string(gen, (unsigned char *)"is_generated", 12);
@@ -227,7 +232,7 @@ craft_status_t craft_serialize_new_agent(craft_model_t* model, char* agent_id, c
       s = s ||  yajl_gen_string(gen, (unsigned char *)"id", 2);
       s = s ||  yajl_gen_string(gen, (unsigned char *)agent_id, strlen(agent_id));
     }
-    s = s ||    yajl_gen_string(gen, (unsigned char *)"model", 5);
+    s = s ||    yajl_gen_string(gen, (unsigned char *)"configuration", 13);
     s = s ||    craft_gen_model(gen, model);
     s = s ||  yajl_gen_map_close(gen);
     yajl_gen_free(gen);
@@ -435,7 +440,7 @@ craft_status_t craft_create_agent(craft_model_t* model, char* agent_id) {
     craft_buffer_t response_body;
 
     /* Let's deal with the query URL */
-    sprintf(url, "%s/api/%s/agents", client.url, client.owner);
+    sprintf(url, "%s/api/v1/%s/agents", client.url, client.owner);
 
     /* Generate the request body */
     memset(&request_body, 0, sizeof(craft_buffer_t));
@@ -460,7 +465,7 @@ craft_status_t craft_delete_agent(char* agent_id) {
     craft_buffer_t response_body;
 
     /* Let's deal with the query URL */
-    sprintf(url, "%s/api/%s/agents/%s", client.url, client.owner, agent_id);
+    sprintf(url, "%s/api/v1/%s/agents/%s", client.url, client.owner, agent_id);
 
     /* Initialize the response buffer */
     memset(&response_body, 0, sizeof(craft_buffer_t));
